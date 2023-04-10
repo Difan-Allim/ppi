@@ -2,54 +2,39 @@ import pygame
 
 pygame.init()
 
-screen_width = 800
-screen_height = 600
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("2D Animation")
+# создание окна
+screen = pygame.display.set_mode((800, 600))
 
-# Define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
+# загрузка изображения
+ball_image = pygame.image.load('ball.png')
 
-# Define a sprite class
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self, color, x, y, width, height):
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+# начальное положение шара
+x = 0
+y = 0
 
-# Create a sprite group
-all_sprites = pygame.sprite.Group()
+# скорость перемещения шара
+dx = 5
+dy = 5
 
-# Create a sprite object
-player = Sprite(RED, 0, 0, 50, 50)
-
-# Add the sprite object to the sprite group
-all_sprites.add(player)
-
-# Set up the game loop
-running = True
-while running:
-    # Handle events
+# основной цикл программы
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            quit()
 
-    # Update sprites
-    all_sprites.update()
+    # перемещение шара
+    x += dx
+    y += dy
 
-    # Fill the screen with white
-    screen.fill(WHITE)
+    # отражение шара при касании края экрана
+    if x < 0 or x > 800 - ball_image.get_width():
+        dx = -dx
+    if y < 0 or y > 600 - ball_image.get_height():
+        dy = -dy
 
-    # Draw sprites
-    all_sprites.draw(screen)
+    # отрисовка шара
+    screen.blit(ball_image, (x, y))
 
-    # Update the display
-    pygame.display.flip()
-
-# Quit the game
-pygame.quit()
+    # обновление экрана
+    pygame.display.update()
