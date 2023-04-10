@@ -1,40 +1,50 @@
 import pygame
+import math
 
+# инициализация Pygame
 pygame.init()
 
-# создание окна
-screen = pygame.display.set_mode((800, 600))
+# задание размера окна
+screen_width = 640
+screen_height = 480
+screen = pygame.display.set_mode((screen_width, screen_height))
 
-# загрузка изображения
-ball_image = pygame.image.load('ball.png')
+# задание цвета фона
+bg_color = (255, 255, 255)
 
-# начальное положение шара
-x = 0
-y = 0
+# задание параметров круга
+circle_radius = 50
+circle_color = (255, 0, 0)
+circle_pos = (screen_width // 2, screen_height // 2)
 
-# скорость перемещения шара
-dx = 5
-dy = 5
+# задание параметров анимации
+fps = 60
+clock = pygame.time.Clock()
+angle = 0
+speed = 2
+radius = 200
 
-# основной цикл программы
+# цикл анимации
 while True:
+    # обработка событий
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            quit()
+            exit()
 
-    # перемещение шара
-    x += dx
-    y += dy
+    # очистка экрана
+    screen.fill(bg_color)
 
-    # отражение шара при касании края экрана
-    if x < 0 or x > 800 - ball_image.get_width():
-        dx = -dx
-    if y < 0 or y > 600 - ball_image.get_height():
-        dy = -dy
+    # расчет новой позиции круга
+    angle += speed
+    x = circle_pos[0] + math.cos(math.radians(angle)) * radius
+    y = circle_pos[1] + math.sin(math.radians(angle)) * radius
 
-    # отрисовка шара
-    screen.blit(ball_image, (x, y))
+    # отрисовка круга
+    pygame.draw.circle(screen, circle_color, (int(x), int(y)), circle_radius)
 
     # обновление экрана
-    pygame.display.update()
+    pygame.display.flip()
+
+    # ограничение частоты кадров
+    clock.tick(fps)
