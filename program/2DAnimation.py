@@ -1,55 +1,50 @@
 import pygame
+import math
 
+# инициализация Pygame
 pygame.init()
 
-screen_width = 800
-screen_height = 600
+# задание размера окна
+screen_width = 640
+screen_height = 480
 screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption("2D Animation")
 
-# Define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED = (255, 0, 0)
+# задание цвета фона
+bg_color = (255, 255, 255)
 
-# Define a sprite class
-class Sprite(pygame.sprite.Sprite):
-    def __init__(self, color, x, y, width, height):
-        super().__init__()
-        self.image = pygame.Surface([width, height])
-        self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+# задание параметров круга
+circle_radius = 50
+circle_color = (255, 0, 0)
+circle_pos = (screen_width // 2, screen_height // 2)
 
-# Create a sprite group
-all_sprites = pygame.sprite.Group()
+# задание параметров анимации
+fps = 60
+clock = pygame.time.Clock()
+angle = 0
+speed = 2
+radius = 200
 
-# Create a sprite object
-player = Sprite(RED, 0, 0, 50, 50)
-
-# Add the sprite object to the sprite group
-all_sprites.add(player)
-
-# Set up the game loop
-running = True
-while running:
-    # Handle events
+# цикл анимации
+while True:
+    # обработка событий
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            exit()
 
-    # Update sprites
-    all_sprites.update()
+    # очистка экрана
+    screen.fill(bg_color)
 
-    # Fill the screen with white
-    screen.fill(WHITE)
+    # расчет новой позиции круга
+    angle += speed
+    x = circle_pos[0] + math.cos(math.radians(angle)) * radius
+    y = circle_pos[1] + math.sin(math.radians(angle)) * radius
 
-    # Draw sprites
-    all_sprites.draw(screen)
+    # отрисовка круга
+    pygame.draw.circle(screen, circle_color, (int(x), int(y)), circle_radius)
 
-    # Update the display
+    # обновление экрана
     pygame.display.flip()
 
-# Quit the game
-pygame.quit()
+    # ограничение частоты кадров
+    clock.tick(fps)
